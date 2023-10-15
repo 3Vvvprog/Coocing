@@ -19,6 +19,7 @@ class FoodViewControllerSet: UIViewController {
         
         initialize()
         makeConstraints()
+        
     }
     
     
@@ -27,33 +28,6 @@ class FoodViewControllerSet: UIViewController {
         print("Deinit")
     }
     
-    var breakfastItems: [FoodItem] = [
-        FoodItem(name: "Брауни", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "Брауни", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "Брауни", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "Брауни", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-    ]
-    
-    var snacksItems: [FoodItem] = [
-        FoodItem(name: "Snack", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "Snack", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "Snack", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "Snack", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-    ]
-    
-    var saladItems: [FoodItem] = [
-        FoodItem(name: "salad", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "salad", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "salad", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        
-    ]
-    
-    var meatItems: [FoodItem] = [
-        FoodItem(name: "meat", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "meat", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        FoodItem(name: "meat", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут"),
-        
-    ]
     
     
     
@@ -72,6 +46,7 @@ private extension FoodViewControllerSet {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = Constants.backColor
         collectionView.dataSource = self
+        collectionView.delegate = self
         collectionView.register(FoodCell.self, forCellWithReuseIdentifier: "FoodCell")
         view.addSubview(collectionView)
     }
@@ -111,13 +86,15 @@ extension FoodViewControllerSet: UICollectionViewDataSource {
         
         switch Type.type {
         case .breakfast:
-            return breakfastItems.count
+            return Food.breakfastItems.count
         case .snacks:
-            return snacksItems.count
+            return Food.snacksItems.count
         case .salad:
-            return saladItems.count
+            return Food.saladItems.count
         case .meat:
-            return meatItems.count
+            return Food.meatItems.count
+        case .soup:
+            return Food.soupItems.count
             
         }
     }
@@ -128,25 +105,49 @@ extension FoodViewControllerSet: UICollectionViewDataSource {
         case .breakfast:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
-            cell.configure(with: breakfastItems[indexPath.item])
+            cell.configure(with: Food.breakfastItems[indexPath.item])
             return cell
         case .snacks:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
-            cell.configure(with: snacksItems[indexPath.item])
+            cell.configure(with: Food.snacksItems[indexPath.item])
             return cell
         case .salad:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
-            cell.configure(with: saladItems[indexPath.item])
+            cell.configure(with: Food.saladItems[indexPath.item])
             return cell
         case .meat:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
-            cell.configure(with: meatItems[indexPath.item])
+            cell.configure(with: Food.meatItems[indexPath.item])
             return cell
+        case .soup:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
+            
+            cell.configure(with: Food.soupItems[indexPath.item])
+            return cell
+
         }
     }
     
     
+}
+
+
+extension FoodViewControllerSet: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = FoodDescriptionViewController()
+        let number = indexPath.item
+        FoodDescriptionConfigure.cellNumber = number
+        
+        
+        if FoodDescription.breakfastItemDescriptions.count > number {
+            navigationController?.pushViewController(vc, animated: true)
+        }else {
+            print("Ничего не найдено!!")
+        }
+        
+        
+    }
 }

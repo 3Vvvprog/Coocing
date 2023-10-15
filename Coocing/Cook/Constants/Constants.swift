@@ -14,7 +14,7 @@ enum Constants {
 }
 
 enum TypeOfFood {
-    case breakfast, snacks, salad, meat
+    case breakfast, snacks, salad, meat, soup
 }
 
 enum Type {

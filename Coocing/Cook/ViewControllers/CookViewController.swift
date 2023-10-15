@@ -29,7 +29,7 @@ class CookViewController: UIViewController {
         CookTypeFood(backgroundImage: UIImage(named: "snacksBack")!, logo: UIImage(named: "snacksLogo")!, nameOfTypeFood: "Закуски"),
         CookTypeFood(backgroundImage: UIImage(named: "saladBack")!, logo: UIImage(named: "saladLogo")!, nameOfTypeFood: "Салаты"),
         CookTypeFood(backgroundImage: UIImage(named: "meatBack")!, logo: UIImage(named: "meatLogo")!, nameOfTypeFood: "Вторые блюда"),
-        CookTypeFood(backgroundImage: UIImage(named: "snacksBack")!, logo: UIImage(named: "snacksLogo")!, nameOfTypeFood: "Закуски"),
+        CookTypeFood(backgroundImage: UIImage(named: "soupBack")!, logo: UIImage(named: "soupLogo")!, nameOfTypeFood: "Cупы"),
     ]
     // private constants
     private enum UIConstants {
@@ -108,6 +108,8 @@ extension CookViewController: UICollectionViewDelegate {
             Type.type = .salad
         case 3:
             Type.type = .meat
+        case 4:
+            Type.type = .soup
         default:
             break
         }

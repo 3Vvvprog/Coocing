@@ -29,6 +29,7 @@ class FoodCell: UICollectionViewCell {
     }
     
     private enum UIConstants {
+        static var cellHeight: CGFloat = 173
         static var cellWidth: CGFloat = Constants.screanWidth
     }
     
