@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Foundation
 
 
 class FoodDescriptionViewController: UIViewController {
@@ -105,21 +106,7 @@ class FoodDescriptionViewController: UIViewController {
     }()
     
     private var starButton = UIBarButtonItem()
-    private var isFavorit: Bool = false {
-        didSet {
-            if isFavorit {
-                UIView.animate(withDuration: 2) {
-                    self.starButton.image = UIImage(systemName: "star.fill")
-                    self.starButton.tintColor = .yellow
-                }
-            }else {
-                UIView.animate(withDuration: 2) {
-                    self.starButton.image = UIImage(systemName: "star")
-                    self.starButton.tintColor = .white
-                }
-            }
-        }
-    }
+    private var isFavorit: Bool = false
 }
 
 
@@ -187,9 +174,7 @@ private extension FoodDescriptionViewController {
         
         
         for (key, value) in source.ingredients.enumerated() {
-            print(key)
             if key == source.ingredients.count - 1 {
-                print("yes")
                 lastIngredient = makeIngredient(ingredient: value.key, ingredientNumber: value.value, count: key)
                 scrollView.addSubview(lastIngredient)
                 
@@ -242,7 +227,11 @@ private extension FoodDescriptionViewController {
         instructionLabel.text = source.instruction
         adviceLabel.text = source.advice
         
-        isFavorit = source.isFavorit
+        if FavoriteFood.items.contains(where: { $0.name == title! }) {
+            isFavorit = true
+        }
+        
+        FoodDescriptionConfigure.choisedName = ""
         
     }
     
@@ -328,7 +317,20 @@ private extension FoodDescriptionViewController {
     }
     
     @objc func didTapStarBarButtonItem() {
-        
+        if !isFavorit {
+            UIView.animate(withDuration: 2) {
+                self.starButton.image = UIImage(systemName: "star.fill")
+                self.starButton.tintColor = .yellow
+                FavoriteFood.items.append(allFoodDescription.allItems.first(where: { $0.name == self.title! })!)
+            }
+        }else {
+            UIView.animate(withDuration: 2) {
+                self.starButton.image = UIImage(systemName: "star")
+                self.starButton.tintColor = .white
+                FavoriteFood.items.removeAll(where: { $0.name == self.title! })
+            }
+        }
+        print(FavoriteFood.items)
         isFavorit = !isFavorit
     }
     

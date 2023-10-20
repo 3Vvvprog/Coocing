@@ -143,6 +143,7 @@ extension FoodViewControllerSet: UICollectionViewDataSource {
             
             cell.configure(with: allItems[indexPath.item])
             return cell
+            
         }
     }
     

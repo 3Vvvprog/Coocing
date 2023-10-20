@@ -8,7 +8,15 @@
 import UIKit
 
 
+struct FavoriteFood {
+    static var items: [FoodItem] = []
+}
+
+
 struct Food {
+    
+    static var favorit: [String] = ["Сырники из творога", "Завтрак приморский" ]
+    
     static var breakfastItems: [FoodItem] = [
         FoodItem(name: "Брауни", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут", type: .breakfast),
         FoodItem(name: "Сырники из творога", image: UIImage(named: "сырники")!, numberOfIngredients: "5 ингридиентов", nameOfPortions: "2 порции", time: "30 минут", type: .breakfast),
