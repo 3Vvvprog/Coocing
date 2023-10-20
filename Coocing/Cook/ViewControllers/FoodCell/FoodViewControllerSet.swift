@@ -60,7 +60,6 @@ class FoodViewControllerSet: UIViewController {
     // private properties
     private var collectionView: UICollectionView!
     
-    private var customSearchBar = CustomSearchController(searchResultsController: nil)
     private var searchController = UISearchController(searchResultsController: nil)
 }
 
