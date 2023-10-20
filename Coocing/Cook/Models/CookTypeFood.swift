@@ -12,4 +12,5 @@ struct CookTypeFood {
     var backgroundImage: UIImage
     var logo: UIImage
     var nameOfTypeFood: String
+    var type: TypeOfFood
 }

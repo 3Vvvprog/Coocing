@@ -17,6 +17,4 @@ enum TypeOfFood {
     case breakfast, snacks, salad, meat, soup
 }
 
-enum Type {
-    static var type: TypeOfFood = .breakfast
-}
+

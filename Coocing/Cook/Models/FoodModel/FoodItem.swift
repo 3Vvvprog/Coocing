@@ -13,6 +13,7 @@ struct FoodItem {
     var numberOfIngredients: String
     var nameOfPortions: String
     var time: String
+    var type: TypeOfFood
 }
 
 

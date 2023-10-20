@@ -103,11 +103,29 @@ class FoodDescriptionViewController: UIViewController {
         label.numberOfLines = 0
         return label
     }()
+    
+    private var starButton = UIBarButtonItem()
+    private var isFavorit: Bool = false {
+        didSet {
+            if isFavorit {
+                UIView.animate(withDuration: 2) {
+                    self.starButton.image = UIImage(systemName: "star.fill")
+                    self.starButton.tintColor = .yellow
+                }
+            }else {
+                UIView.animate(withDuration: 2) {
+                    self.starButton.image = UIImage(systemName: "star")
+                    self.starButton.tintColor = .white
+                }
+            }
+        }
+    }
 }
 
 
 private extension FoodDescriptionViewController {
     func initialize() {
+        navigationItem.rightBarButtonItems = makeRightBarButtonItem()
         view.backgroundColor = Constants.backColor
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
@@ -206,13 +224,14 @@ private extension FoodDescriptionViewController {
     }
     
     func configure() {
-        let number = FoodDescriptionConfigure.cellNumber
         let type = FoodDescriptionConfigure.type
-        
+        let number = FoodDescriptionConfigure.cellNumber
         
         switch type {
         case .breakfast:
-            source = FoodDescription.breakfastItemDescriptions[number]!
+            source = breakfastFoodDescription.breakfastItemDescriptions.first(where: { $0.foodItem.name == FoodDescriptionConfigure.choisedName }) ?? breakfastFoodDescription.breakfastItemDescriptions[number]
+        case .snacks:
+            source = snacksFoodDescription.snacksItemDescriptions.first(where: { $0.foodItem.name == FoodDescriptionConfigure.choisedName }) ?? snacksFoodDescription.snacksItemDescriptions[number]
             
         default:
             break
@@ -222,6 +241,9 @@ private extension FoodDescriptionViewController {
         descriptionLabel.text = source.description
         instructionLabel.text = source.instruction
         adviceLabel.text = source.advice
+        
+        isFavorit = source.isFavorit
+        
     }
     
     
@@ -293,4 +315,22 @@ private extension FoodDescriptionViewController {
         
         return view
     }
+    
+    func makeRightBarButtonItem() -> [UIBarButtonItem] {
+        if !isFavorit {
+            starButton = UIBarButtonItem(image: UIImage(systemName: "star"), style: .plain, target: self, action: #selector(didTapStarBarButtonItem))
+        }else {
+            starButton = UIBarButtonItem(image: UIImage(systemName: "star.fill"), style: .plain, target: self, action: #selector(didTapStarBarButtonItem))
+            starButton.tintColor = .yellow
+        }
+        
+        return [starButton]
+    }
+    
+    @objc func didTapStarBarButtonItem() {
+        
+        isFavorit = !isFavorit
+    }
+    
+    
 }

@@ -8,16 +8,13 @@
 import Foundation
 import UIKit
 
-struct FoodDescriptionConfigure {
-    static var cellNumber = 0
-    static var type: TypeOfFood = Type.type
-}
 
 
-struct FoodDescription {
+struct breakfastFoodDescription {
     
     
-    static var breakfastItemDescriptions: [FoodItemDescription?] = [
+    
+    static var breakfastItemDescriptions: [FoodItemDescription] = [
         FoodItemDescription(foodItem: Food.breakfastItems[0],
                             description: """
                                 Один из самых популярных десертов в мире — брауни — был придуман в 1893 году на кухне легендарного отеля Palmer House в Чикаго. Этот пирог там пекут до сих пор по оригинальному рецепту, покрывая сверху абрикосовой глазурью. В домашней версии, впрочем, у брауни получается такая изумительная сахарная корочка, что глазировать ее было бы преступлением. У традиционных шоколадных брауни ванильный аромат, хрустящая корочка и влажная серединка. В торт также добавляют грецкие орехи или фисташки, а еще клюкву.
@@ -53,7 +50,8 @@ struct FoodDescription {
                             """,
                             advice: """
                                 Можно посыпать сахарной пудрой (или подавать с шариком ванильного мороженого).
-                            """),
+                            """,
+                            isFavorit: true),
         
         FoodItemDescription(foodItem: Food.breakfastItems[1],
                             description: """
@@ -85,7 +83,8 @@ struct FoodDescription {
                             """,
                             advice: """
                                 Лучше всего подавать с медом или вареньем
-                            """),
+                            """,
+                            isFavorit: false),
         FoodItemDescription(foodItem: Food.breakfastItems[2],
                             description: """
                                 Простая яичница на всю семью - это все, что нужно на завтрак
@@ -113,7 +112,8 @@ struct FoodDescription {
                             """,
                             advice: """
                                 Хорошо сочитается с помидорами или колбасой
-                            """),
+                            """,
+                            isFavorit: false),
         
         
         FoodItemDescription(foodItem: Food.breakfastItems[3],
@@ -148,9 +148,17 @@ struct FoodDescription {
                             """,
                             advice: """
                                 Осторожно, очень вкусно!!!
-                            """),
+                            """,
+                            isFavorit: false),
     
     ]
     
     
+}
+
+
+
+struct FoodDescriptionAll {
+    static var allItems: [FoodItemDescription] = [
+    ]
 }

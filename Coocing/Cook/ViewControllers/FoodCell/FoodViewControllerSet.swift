@@ -84,7 +84,7 @@ private extension FoodViewControllerSet {
 extension FoodViewControllerSet: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        switch Type.type {
+        switch FoodDescriptionConfigure.type {
         case .breakfast:
             return Food.breakfastItems.count
         case .snacks:
@@ -101,7 +101,7 @@ extension FoodViewControllerSet: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        switch Type.type {
+        switch FoodDescriptionConfigure.type {
         case .breakfast:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
@@ -141,8 +141,7 @@ extension FoodViewControllerSet: UICollectionViewDelegate {
         let number = indexPath.item
         FoodDescriptionConfigure.cellNumber = number
         
-        
-        if FoodDescription.breakfastItemDescriptions.count > number {
+        if breakfastFoodDescription.breakfastItemDescriptions.count > number {
             navigationController?.pushViewController(vc, animated: true)
         }else {
             print("Ничего не найдено!!")

@@ -17,4 +17,5 @@ struct FoodItemDescription {
     var ingredients: [String: String]
     var instruction: String
     var advice: String // Совет
+    var isFavorit: Bool
 }
