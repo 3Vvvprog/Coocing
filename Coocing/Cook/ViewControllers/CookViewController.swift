@@ -37,12 +37,9 @@ class CookViewController: UIViewController {
         CookTypeFood(backgroundImage: UIImage(named: "soupBack")!, logo: UIImage(named: "soupLogo")!, nameOfTypeFood: "Cупы", type: .soup),
     ]
     
-    private var customBar = CustomSearchController(searchResultsController: nil)
-    private var bag = DisposeBag()
     
     private var filtredItems = [FoodItem]()
     
-    private let searchBarheight: Int = 40
     private var allItems = allFoodDescription.allItems
     private var searchBarIsEmpty: Bool {
         guard let text = searchController.searchBar.text else { return false }
@@ -62,7 +59,6 @@ class CookViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var searchButton: UIBarButtonItem!
-    private var searchLabel: UIBarButtonItem!
     private var searchController = UISearchController(searchResultsController: nil)
     
 }
@@ -84,9 +80,11 @@ private extension CookViewController {
         collectionView.delegate = self
         collectionView.register(CookFoodCell.self, forCellWithReuseIdentifier: "CookFoodCell")
         collectionView.register(FoodCell.self, forCellWithReuseIdentifier: "FoodCell")
-        navigationItem.titleView = searchController.searchBar
+        
         view.addSubview(collectionView)
         
+        
+        navigationItem.titleView = searchController.searchBar
         self.searchController.hidesNavigationBarDuringPresentation = false
         self.searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchResultsUpdater = self
@@ -113,11 +111,6 @@ private extension CookViewController {
         return [searchButton]
     }
     
-    func makeSearchLabel() -> [UIBarButtonItem] {
-        
-        searchLabel = UIBarButtonItem(customView: customBar.searchBar)
-        return [searchLabel]
-    }
     
     
     
@@ -164,6 +157,7 @@ extension CookViewController: UICollectionViewDelegate {
         if !isFiltering {
             FoodDescriptionConfigure.type = items[indexPath.item].type
             FoodDescriptionConfigure.choisedName = items[indexPath.item].nameOfTypeFood
+            definesPresentationContext = false
             vc = FoodViewControllerSet()
             navigationController?.pushViewController(vc, animated: true)
         }else {

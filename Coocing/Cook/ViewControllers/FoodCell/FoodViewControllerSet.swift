@@ -11,12 +11,28 @@ import SnapKit
 class FoodViewControllerSet: UIViewController {
     
     
+    private func configure() {
+        switch FoodDescriptionConfigure.type {
+        case .breakfast:
+            allItems = Food.breakfastItems
+        case .snacks:
+            allItems = Food.snacksItems
+        case .salad:
+            allItems = Food.saladItems
+        case .meat:
+            allItems = Food.meatItems
+        case .soup:
+            allItems = Food.soupItems
+            
+        }
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = Constants.backColor
         title = "Завтраки"
         navigationItem.leftBarButtonItems = makeLeftTabBarButton()
-        navigationItem.rightBarButtonItems = makeRightBarButtonItem()
         
+        configure()
         initialize()
         makeConstraints()
         
@@ -29,10 +45,23 @@ class FoodViewControllerSet: UIViewController {
     }
     
     
+    private var filtredItems = [FoodItem]()
     
+    private var allItems = [FoodItem]()
+    private var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else { return false }
+        return text.isEmpty
+    }
+    
+    private var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
     
     // private properties
     private var collectionView: UICollectionView!
+    
+    private var customSearchBar = CustomSearchController(searchResultsController: nil)
+    private var searchController = UISearchController(searchResultsController: nil)
 }
 
 
@@ -49,6 +78,14 @@ private extension FoodViewControllerSet {
         collectionView.delegate = self
         collectionView.register(FoodCell.self, forCellWithReuseIdentifier: "FoodCell")
         view.addSubview(collectionView)
+        
+        
+        navigationItem.titleView = searchController.searchBar
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Поиск"
+        definesPresentationContext = true
     }
     
     func makeConstraints() {
@@ -56,6 +93,7 @@ private extension FoodViewControllerSet {
             make.leading.trailing.equalToSuperview()
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+        
     }
     
     func makeLeftTabBarButton() -> [UIBarButtonItem] {
@@ -84,50 +122,27 @@ private extension FoodViewControllerSet {
 extension FoodViewControllerSet: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        switch FoodDescriptionConfigure.type {
-        case .breakfast:
-            return Food.breakfastItems.count
-        case .snacks:
-            return Food.snacksItems.count
-        case .salad:
-            return Food.saladItems.count
-        case .meat:
-            return Food.meatItems.count
-        case .soup:
-            return Food.soupItems.count
-            
+        if isFiltering {
+            return filtredItems.count
+        }else {
+            return allItems.count
         }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        switch FoodDescriptionConfigure.type {
-        case .breakfast:
+        
+        if isFiltering {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
-            cell.configure(with: Food.breakfastItems[indexPath.item])
+            cell.configure(with: filtredItems[indexPath.item])
             return cell
-        case .snacks:
+        }else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
             
-            cell.configure(with: Food.snacksItems[indexPath.item])
+            cell.configure(with: allItems[indexPath.item])
             return cell
-        case .salad:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
-            
-            cell.configure(with: Food.saladItems[indexPath.item])
-            return cell
-        case .meat:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
-            
-            cell.configure(with: Food.meatItems[indexPath.item])
-            return cell
-        case .soup:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
-            
-            cell.configure(with: Food.soupItems[indexPath.item])
-            return cell
-
         }
     }
     
@@ -148,5 +163,24 @@ extension FoodViewControllerSet: UICollectionViewDelegate {
         }
         
         
+    }
+}
+
+
+
+extension FoodViewControllerSet: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
+    
+    
+    
+
+    private func filterContentForSearchText(_ searchText: String) {
+        filtredItems = allItems.filter { item -> Bool in
+            return item.name.lowercased().contains(searchText.lowercased())
+        }
+        
+        collectionView.reloadData()
     }
 }
