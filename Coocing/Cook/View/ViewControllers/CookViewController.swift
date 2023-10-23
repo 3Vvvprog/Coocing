@@ -7,12 +7,13 @@
 
 import UIKit
 import SnapKit
-import RxCocoa
-import RxRelay
-import RxSwift
 
 
 class CookViewController: UIViewController {
+    
+    func reloadView() {
+        collectionView.reloadData()
+    }
 
     
     override func viewDidLoad() {
@@ -27,14 +28,10 @@ class CookViewController: UIViewController {
         makeConstraints()
     }
     
-    
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         collectionView.reloadData()
-        
-       
     }
-    
-    
     
     private var items: [CookTypeFood] = [
         CookTypeFood(backgroundImage: UIImage(named: "BreakfastBack")!, logo: UIImage(named: "BreakfastLogo")!, nameOfTypeFood: "Завтраки", type: .breakfast),
@@ -90,6 +87,7 @@ private extension CookViewController {
         collectionView.register(CookFoodCell.self, forCellWithReuseIdentifier: "CookFoodCell")
         collectionView.register(FoodCell.self, forCellWithReuseIdentifier: "FoodCell")
         collectionView.isScrollEnabled = false
+        collectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionView)
         
         
@@ -143,15 +141,6 @@ private extension CookViewController {
     }
     
     private func filterContentForFavoriteItems() {
-        
-        
-        for item in Food.favorit {
-            if !FavoriteFood.items.contains(where: { $0.name == item }) {
-                FavoriteFood.items.append(allItems.first(where: { $0.name == item })!)
-            }
-            
-            
-        }
         
         collectionView.reloadData()
         

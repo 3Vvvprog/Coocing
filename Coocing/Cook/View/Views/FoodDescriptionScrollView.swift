@@ -1,34 +1,38 @@
 //
-//  FoodDescriptionViewController.swift
+//  FoodDescriptionScrollView.swift
 //  Coocing
 //
-//  Created by Вячеслав Вовк on 15.10.2023.
+//  Created by Вячеслав Вовк on 23.10.2023.
 //
 
 import UIKit
 import SnapKit
-import Foundation
 
-
-class FoodDescriptionViewController: UIViewController {
+class FoodDescriptionScrollView: UIScrollView {
     
-    private var source: FoodItemDescription!
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configure()
+    private var foodDescription: FoodItemDescription!
+    func configure(foodDescription: FoodItemDescription) {
+        self.foodDescription = foodDescription
+        
         initialize()
-        makeConstrains()
+        makeConstraintes()
+        
+        imageView.image = foodDescription.foodItem.image
+        descriptionLabel.text = foodDescription.description
+        instructionLabel.text = foodDescription.instruction
+        adviceLabel.text = foodDescription.advice
         
     }
     
-    private enum UIConstants {
-        static var imageHeight: CGFloat = 200
-        static var imageWidth: CGFloat = Constants.screanWidth
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
     }
     
-    private let scrollView = UIScrollView()
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private let imageView = UIImageView()
     private let descriptionLabel: UILabel = {
         let label = UILabel()
@@ -105,32 +109,28 @@ class FoodDescriptionViewController: UIViewController {
         return label
     }()
     
-    private var starButton = UIBarButtonItem()
-    private var isFavorit: Bool = false
+    
+    
+    private enum UIConstants {
+        static var imageHeight: CGFloat = 200
+        static var imageWidth: CGFloat = Constants.screanWidth
+    }
 }
 
-
-private extension FoodDescriptionViewController {
+private extension FoodDescriptionScrollView {
     func initialize() {
-        navigationItem.rightBarButtonItems = makeRightBarButtonItem()
-        view.backgroundColor = Constants.backColor
-        view.addSubview(scrollView)
-        scrollView.addSubview(imageView)
-        scrollView.addSubview(descriptionLabel)
-        scrollView.addSubview(enginLabel)
-        scrollView.addSubview(enginStack)
-        scrollView.addSubview(ingredientsLabel)
-        scrollView.addSubview(instruction)
-        scrollView.addSubview(instructionLabel)
-        scrollView.addSubview(advice)
-        scrollView.addSubview(adviceLabel)
+        addSubview(imageView)
+        addSubview(descriptionLabel)
+        addSubview(enginLabel)
+        addSubview(enginStack)
+        addSubview(ingredientsLabel)
+        addSubview(instruction)
+        addSubview(instructionLabel)
+        addSubview(advice)
+        addSubview(adviceLabel)
     }
     
-    func makeConstrains() {
-        scrollView.snp.makeConstraints { make in
-            make.directionalEdges.equalTo(view.safeAreaLayoutGuide)
-        }
-        
+    func makeConstraintes() {
         imageView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
             make.height.equalTo(UIConstants.imageHeight)
@@ -152,34 +152,15 @@ private extension FoodDescriptionViewController {
             make.height.equalTo(70)
         }
         
-    
-        let kkalStack = makeStack(text: "КАЛОРИЙНОСТЬ", number: source.kkal, desc: "ККАЛ")
-        enginStack.addArrangedSubview(kkalStack)
+        makeEngineStack(foodDescription: foodDescription)
         
-        let proteinsStack = makeStack(text: "БЕЛКИ", number: source.proteins, desc: "ГРАММ")
-        enginStack.addArrangedSubview(proteinsStack)
-        
-        let fatsStack = makeStack(text: "ЖИРЫ", number: source.fats, desc: "ГРАММ")
-        enginStack.addArrangedSubview(fatsStack)
-        
-        let carbohydratesStack = makeStack(text: "УГЛЕВОДЫ", number: source.carbohydrates, desc: "ГРАММ")
-        enginStack.addArrangedSubview(carbohydratesStack)
-        
-        ingredientsLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(10)
-            make.top.equalTo(enginStack.snp.bottom).offset(30)
-            
-        }
-        
-        
-        
-        for (key, value) in source.ingredients.enumerated() {
-            if key == source.ingredients.count - 1 {
+        for (key, value) in foodDescription.ingredients.enumerated() {
+            if key == foodDescription.ingredients.count - 1 {
                 lastIngredient = makeIngredient(ingredient: value.key, ingredientNumber: value.value, count: key)
-                scrollView.addSubview(lastIngredient)
+                addSubview(lastIngredient)
                 
             }else {
-                scrollView.addSubview(makeIngredient(ingredient: value.key, ingredientNumber: value.value, count: key))
+                addSubview(makeIngredient(ingredient: value.key, ingredientNumber: value.value, count: key))
             }
         }
         
@@ -204,35 +185,31 @@ private extension FoodDescriptionViewController {
             make.top.equalTo(advice.snp.bottom).offset(10)
             make.bottom.equalToSuperview()
         }
-        
-       
     }
     
-    func configure() {
-        let type = FoodDescriptionConfigure.type
-        let number = FoodDescriptionConfigure.cellNumber
+    
+    
+}
+
+private extension FoodDescriptionScrollView {
+    func makeEngineStack(foodDescription: FoodItemDescription) {
+        let kkalStack = makeStack(text: "КАЛОРИЙНОСТЬ", number: foodDescription.kkal, desc: "ККАЛ")
+        enginStack.addArrangedSubview(kkalStack)
         
-        switch type {
-        case .breakfast:
-            source = breakfastFoodDescription.breakfastItemDescriptions.first(where: { $0.foodItem.name == FoodDescriptionConfigure.choisedName }) ?? breakfastFoodDescription.breakfastItemDescriptions[number]
-        case .snacks:
-            source = snacksFoodDescription.snacksItemDescriptions.first(where: { $0.foodItem.name == FoodDescriptionConfigure.choisedName }) ?? snacksFoodDescription.snacksItemDescriptions[number]
+        let proteinsStack = makeStack(text: "БЕЛКИ", number: foodDescription.proteins, desc: "ГРАММ")
+        enginStack.addArrangedSubview(proteinsStack)
+        
+        let fatsStack = makeStack(text: "ЖИРЫ", number: foodDescription.fats, desc: "ГРАММ")
+        enginStack.addArrangedSubview(fatsStack)
+        
+        let carbohydratesStack = makeStack(text: "УГЛЕВОДЫ", number: foodDescription.carbohydrates, desc: "ГРАММ")
+        enginStack.addArrangedSubview(carbohydratesStack)
+        
+        ingredientsLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(10)
+            make.top.equalTo(enginStack.snp.bottom).offset(30)
             
-        default:
-            break
         }
-        title = source.foodItem.name
-        imageView.image = source.foodItem.image
-        descriptionLabel.text = source.description
-        instructionLabel.text = source.instruction
-        adviceLabel.text = source.advice
-        
-        if FavoriteFood.items.contains(where: { $0.name == title! }) {
-            isFavorit = true
-        }
-        
-        FoodDescriptionConfigure.choisedName = ""
-        
     }
     
     
@@ -269,7 +246,7 @@ private extension FoodDescriptionViewController {
     
     func makeIngredient(ingredient: String, ingredientNumber: String, count: Int) -> UIView {
         let view = UIView()
-        scrollView.addSubview(view)
+        addSubview(view)
         
         let label = UILabel()
         label.textColor = .white
@@ -304,35 +281,4 @@ private extension FoodDescriptionViewController {
         
         return view
     }
-    
-    func makeRightBarButtonItem() -> [UIBarButtonItem] {
-        if !isFavorit {
-            starButton = UIBarButtonItem(image: UIImage(systemName: "star"), style: .plain, target: self, action: #selector(didTapStarBarButtonItem))
-        }else {
-            starButton = UIBarButtonItem(image: UIImage(systemName: "star.fill"), style: .plain, target: self, action: #selector(didTapStarBarButtonItem))
-            starButton.tintColor = .yellow
-        }
-        
-        return [starButton]
-    }
-    
-    @objc func didTapStarBarButtonItem() {
-        if !isFavorit {
-            UIView.animate(withDuration: 2) {
-                self.starButton.image = UIImage(systemName: "star.fill")
-                self.starButton.tintColor = .yellow
-                FavoriteFood.items.append(allFoodDescription.allItems.first(where: { $0.name == self.title! })!)
-            }
-        }else {
-            UIView.animate(withDuration: 2) {
-                self.starButton.image = UIImage(systemName: "star")
-                self.starButton.tintColor = .white
-                FavoriteFood.items.removeAll(where: { $0.name == self.title! })
-            }
-        }
-        print(FavoriteFood.items)
-        isFavorit = !isFavorit
-    }
-    
-    
 }

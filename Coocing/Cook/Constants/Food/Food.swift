@@ -8,14 +8,15 @@
 import UIKit
 
 
-struct FavoriteFood {
-    static var items: [FoodItem] = []
+enum TypeOfFood {
+    case breakfast, snacks, salad, meat, soup
 }
 
+struct FavoriteFood {
+    static var items: [FoodItem] = [Food.breakfastItems[0], Food.breakfastItems[1],]
+}
 
 struct Food {
-    
-    static var favorit: [String] = ["Сырники из творога", "Завтрак приморский" ]
     
     static var breakfastItems: [FoodItem] = [
         FoodItem(name: "Брауни", image: UIImage(named: "брауни")!, numberOfIngredients: "6 ингридиентов", nameOfPortions: "6 порций", time: "40 минут", type: .breakfast),

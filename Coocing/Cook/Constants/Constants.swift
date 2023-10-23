@@ -12,9 +12,3 @@ enum Constants {
     static var screanWidth: CGFloat = 0
     static let backColor: UIColor = UIColor(red: 32/255.0, green: 25/255.0, blue: 23/255.0, alpha: 1.000)
 }
-
-enum TypeOfFood {
-    case breakfast, snacks, salad, meat, soup
-}
-
-

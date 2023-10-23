@@ -76,6 +76,7 @@ private extension FoodViewControllerSet {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(FoodCell.self, forCellWithReuseIdentifier: "FoodCell")
+        collectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionView)
         
         
@@ -154,13 +155,10 @@ extension FoodViewControllerSet: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = FoodDescriptionViewController()
         let number = indexPath.item
-        FoodDescriptionConfigure.cellNumber = number
+        FoodDescriptionConfigure.choisedName = allItems[number].name
         
-        if breakfastFoodDescription.breakfastItemDescriptions.count > number {
-            navigationController?.pushViewController(vc, animated: true)
-        }else {
-            print("Ничего не найдено!!")
-        }
+        navigationController?.pushViewController(vc, animated: true)
+        
         
         
     }
