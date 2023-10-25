@@ -10,44 +10,21 @@ import SnapKit
 
 class FoodViewControllerSet: UIViewController {
     
+    // MARK: - View Model
+    private let viewModel: FoodSetProtocol = FoodSetViewModel()
     
-    private func configure() {
-        switch FoodDescriptionConfigure.type {
-        case .breakfast:
-            allItems = Food.breakfastItems
-        case .snacks:
-            allItems = Food.snacksItems
-        case .salad:
-            allItems = Food.saladItems
-        case .meat:
-            allItems = Food.meatItems
-        case .soup:
-            allItems = Food.soupItems
-            
-        }
-    }
-    
+    // MARK: - init
     override func viewDidLoad() {
-        view.backgroundColor = Constants.backColor
-        title = "Завтраки"
-        navigationItem.leftBarButtonItems = makeLeftTabBarButton()
-        
-        configure()
+        allItems = viewModel.getAllItems(type: FoodDescriptionConfigure.type)
         initialize()
         makeConstraints()
-        
     }
-    
-    
-    
-    deinit {
-        print("Deinit")
-    }
-    
-    
+    // MARK: - Private arrays
     private var filtredItems = [FoodItem]()
+    private var allItems: [FoodItem]!
     
-    private var allItems = [FoodItem]()
+    
+    // MARK: - Private properties
     private var searchBarIsEmpty: Bool {
         guard let text = searchController.searchBar.text else { return false }
         return text.isEmpty
@@ -56,17 +33,18 @@ class FoodViewControllerSet: UIViewController {
     private var isFiltering: Bool {
         return searchController.isActive && !searchBarIsEmpty
     }
-    
-    // private properties
     private var collectionView: UICollectionView!
     
     private var searchController = UISearchController(searchResultsController: nil)
 }
 
-
+// MARK: - Private methods
 private extension FoodViewControllerSet {
     
     func initialize() {
+        view.backgroundColor = Constants.backColor
+        title = "Завтраки"
+        navigationItem.leftBarButtonItems = makeLeftTabBarButton()
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -102,11 +80,10 @@ private extension FoodViewControllerSet {
         return [backBarButton]
     }
     
-    func makeRightBarButtonItem() -> [UIBarButtonItem] {
-        let searchButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(didTapSearchBarButton))
-        
-        return [searchButton]
-    }
+}
+
+// MARK: - Button actions
+private extension FoodViewControllerSet {
     
     @objc func didTapSearchBarButton() {
         print("Search")
@@ -117,8 +94,7 @@ private extension FoodViewControllerSet {
     }
 }
 
-
-
+// MARK: - DataSource
 extension FoodViewControllerSet: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -150,7 +126,7 @@ extension FoodViewControllerSet: UICollectionViewDataSource {
     
 }
 
-
+// MARK: - Delegate
 extension FoodViewControllerSet: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = FoodDescriptionViewController()
@@ -165,15 +141,12 @@ extension FoodViewControllerSet: UICollectionViewDelegate {
 }
 
 
-
+// MARK: - Search update action
 extension FoodViewControllerSet: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filterContentForSearchText(searchController.searchBar.text!)
     }
     
-    
-    
-
     private func filterContentForSearchText(_ searchText: String) {
         filtredItems = allItems.filter { item -> Bool in
             return item.name.lowercased().contains(searchText.lowercased())

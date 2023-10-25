@@ -75,6 +75,10 @@ private extension FoodDescriptionViewController {
         return [starButton]
     }
         
+}
+
+// MARK: - Button actions
+private extension FoodDescriptionViewController {
     // MARK: - Star button action
     @objc func didTapStarBarButtonItem() {
         if !isFavorit {
@@ -90,7 +94,6 @@ private extension FoodDescriptionViewController {
                 FavoriteFood.items.removeAll(where: { $0.name == self.title! })
             }
         }
-        
         isFavorit = !isFavorit
     }
 }

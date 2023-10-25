@@ -24,22 +24,16 @@ class CookViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         Constants.screanHeight = view.safeAreaLayoutGuide.layoutFrame.size.height
-       
         makeConstraints()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
         collectionView.reloadData()
     }
     
-    private var items: [CookTypeFood] = [
-        CookTypeFood(backgroundImage: UIImage(named: "BreakfastBack")!, logo: UIImage(named: "BreakfastLogo")!, nameOfTypeFood: "Завтраки", type: .breakfast),
-        CookTypeFood(backgroundImage: UIImage(named: "snacksBack")!, logo: UIImage(named: "snacksLogo")!, nameOfTypeFood: "Закуски", type: .snacks),
-        CookTypeFood(backgroundImage: UIImage(named: "saladBack")!, logo: UIImage(named: "saladLogo")!, nameOfTypeFood: "Салаты", type: .salad),
-        CookTypeFood(backgroundImage: UIImage(named: "meatBack")!, logo: UIImage(named: "meatLogo")!, nameOfTypeFood: "Вторые блюда", type: .meat),
-        CookTypeFood(backgroundImage: UIImage(named: "soupBack")!, logo: UIImage(named: "soupLogo")!, nameOfTypeFood: "Cупы", type: .soup),
-    ]
+    private var items: [CookTypeFood] = TypeOfFoodStruct.items
     
     
     private var filtredItems = [FoodItem]()
@@ -126,10 +120,13 @@ private extension CookViewController {
     @objc func didTapStarBarButton() {
         
         if !isFavorite {
+            searchController.searchBar.text = ""
+            searchController.isActive = false
             filterContentForFavoriteItems()
             starButton.image = UIImage(systemName: "star.fill")
             starButton.tintColor = .yellow
         }else {
+            searchController.isActive = false
             collectionView.reloadData()
             starButton.image = UIImage(systemName: "star")
             starButton.tintColor = .white
@@ -188,6 +185,8 @@ extension CookViewController: UICollectionViewDataSource {
 
 extension CookViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        
         var vc: UIViewController
         
         if isFiltering {
@@ -202,6 +201,8 @@ extension CookViewController: UICollectionViewDelegate {
             FoodDescriptionConfigure.type = items[indexPath.item].type
             vc = FoodViewControllerSet()
         }
+        
+        
         definesPresentationContext = false
         navigationController?.pushViewController(vc, animated: true)
     }
