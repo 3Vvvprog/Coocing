@@ -12,7 +12,7 @@ import SnapKit
 class FoodCell: UICollectionViewCell {
     
     func configure(with info: FoodItem) {
-        imageView.image = info.image
+        imageView.image = UIImage(named: info.image)
         nameLabel.text = info.name
         ingredientsLabel.text = info.numberOfIngredients
         portionsLabel.text = info.nameOfPortions

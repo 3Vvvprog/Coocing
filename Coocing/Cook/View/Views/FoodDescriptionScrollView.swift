@@ -17,7 +17,7 @@ class FoodDescriptionScrollView: UIScrollView {
         initialize()
         makeConstraintes()
         
-        imageView.image = foodDescription.foodItem.image
+        imageView.image = UIImage(named: foodDescription.foodItem.image)
         descriptionLabel.text = foodDescription.description
         instructionLabel.text = foodDescription.instruction
         adviceLabel.text = foodDescription.advice

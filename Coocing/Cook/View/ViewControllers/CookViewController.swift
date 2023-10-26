@@ -7,9 +7,14 @@
 
 import UIKit
 import SnapKit
-
+import RxSwift
+import RxCocoa
+import RxRelay
 
 class CookViewController: UIViewController {
+    
+    private let disposeBag = DisposeBag()
+    private let userDefaults = FoodUserDefaults()
     
     func reloadView() {
         collectionView.reloadData()
@@ -29,14 +34,14 @@ class CookViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
-        collectionView.reloadData()
+        filterContentForFavoriteItems()
     }
     
     private var items: [CookTypeFood] = TypeOfFoodStruct.items
     
     
     private var filtredItems = [FoodItem]()
+    private var favoriteItems = [FoodItem]()
     
     private var allItems = allFoodDescription.allItems
     private var searchBarIsEmpty: Bool {
@@ -60,6 +65,8 @@ class CookViewController: UIViewController {
     private var searchButton: UIBarButtonItem!
     private var searchController = UISearchController(searchResultsController: nil)
     private var starButton = UIBarButtonItem()
+    
+    
     
 }
 
@@ -139,6 +146,7 @@ private extension CookViewController {
     
     private func filterContentForFavoriteItems() {
         
+        favoriteItems = userDefaults.getFavoriteFood()
         collectionView.reloadData()
         
     }
@@ -150,7 +158,7 @@ extension CookViewController: UICollectionViewDataSource {
         if isFiltering {
             return filtredItems.count
         }else if isFavorite {
-            return FavoriteFood.items.count
+            return favoriteItems.count
         }else {
             return items.count
         }
@@ -169,7 +177,7 @@ extension CookViewController: UICollectionViewDataSource {
         }else if isFavorite{
             collectionView.isScrollEnabled = true
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FoodCell", for: indexPath) as! FoodCell
-            cell.configure(with: FavoriteFood.items[indexPath.item])
+            cell.configure(with: favoriteItems[indexPath.item])
             return cell
         }else {
             collectionView.isScrollEnabled = false
@@ -194,8 +202,8 @@ extension CookViewController: UICollectionViewDelegate {
             FoodDescriptionConfigure.choisedName = filtredItems[indexPath.item].name
             vc = FoodDescriptionViewController()
         }else if isFavorite {
-            FoodDescriptionConfigure.type = FavoriteFood.items[indexPath.item].type
-            FoodDescriptionConfigure.choisedName = FavoriteFood.items[indexPath.item].name
+            FoodDescriptionConfigure.type = favoriteItems[indexPath.item].type
+            FoodDescriptionConfigure.choisedName = favoriteItems[indexPath.item].name
             vc = FoodDescriptionViewController()
         }else {
             FoodDescriptionConfigure.type = items[indexPath.item].type

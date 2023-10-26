@@ -11,6 +11,7 @@ import Foundation
 
 
 class FoodDescriptionViewController: UIViewController {
+    private let userDefaults = FoodUserDefaults()
     
     // MARK: - View Model
     private var viewModel: FoodDescriptionProtocol = FoodDescriptionViewModel()
@@ -56,7 +57,7 @@ private extension FoodDescriptionViewController {
         title = foodDescription.foodItem.name
         scrollView.configure(foodDescription: foodDescription)
         
-        if FavoriteFood.items.contains(where: { $0.name == title! }) {
+        if userDefaults.getFavoriteFood().contains(where: { $0.name == title! }) {
             isFavorit = true
         }
         
@@ -85,13 +86,16 @@ private extension FoodDescriptionViewController {
             UIView.animate(withDuration: 2) {
                 self.starButton.image = UIImage(systemName: "star.fill")
                 self.starButton.tintColor = .yellow
-                FavoriteFood.items.append(allFoodDescription.allItems.first(where: { $0.name == self.title! })!)
+                
+                self.userDefaults.setFavoriteFood(item: self.title!)
+                
             }
         }else {
             UIView.animate(withDuration: 2) {
                 self.starButton.image = UIImage(systemName: "star")
                 self.starButton.tintColor = .white
-                FavoriteFood.items.removeAll(where: { $0.name == self.title! })
+                
+                self.userDefaults.removeFavoriteFood(item: self.title!)
             }
         }
         isFavorit = !isFavorit
